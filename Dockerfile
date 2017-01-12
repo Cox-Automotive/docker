@@ -18,7 +18,10 @@ RUN groupadd -g ${gid} ${group} \
 
 # Jenkins home directory is a volume, so configuration and build history 
 # can be persisted and survive image upgrades
-VOLUME /var/jenkins_home
+# We don't want to expose Jenkins home as a volume since this changes what disk the volume is mounted
+# to on Elastic Beanstalk. We want dev/xvdcz, not /dev/xvda since we cant resize the root volume
+# More: https://github.com/aws/amazon-ecs-agent/issues/312
+#VOLUME /var/jenkins_home
 
 # `/usr/share/jenkins/ref/` contains all reference configuration we want 
 # to set on a fresh new installation. Use it to bundle additional plugins 
